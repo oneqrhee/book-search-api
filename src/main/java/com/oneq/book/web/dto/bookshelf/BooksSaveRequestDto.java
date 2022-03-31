@@ -1,4 +1,4 @@
-package com.oneq.book.web.dto;
+package com.oneq.book.web.dto.bookshelf;
 
 import com.oneq.book.domain.Books;
 import lombok.Builder;
@@ -13,16 +13,19 @@ public class BooksSaveRequestDto {
     private String isbn;
     private String link;
     private String image;
-    private String pubdate;
+    private String publisher;
+    private String description;
 
     @Builder
-    public BooksSaveRequestDto(String title, String link, String image, String author, String isbn, String pubdate) {
+    public BooksSaveRequestDto(String title, String link, String image, String author,
+                               String isbn, String publisher, String description) {
         this.title = title;
         this.link = link;
         this.image = image;
         this.author = author;
         this.isbn = isbn;
-        this.pubdate = pubdate;
+        this.publisher = publisher;
+        this.description = description;
     }
 
     public Books toEntity(){
@@ -32,7 +35,8 @@ public class BooksSaveRequestDto {
                 .image(image)
                 .author(author)
                 .isbn(isbn)
-                .pubdate(pubdate)
+                .publisher(publisher)
+                .description(description)
                 .build();
     }
 }

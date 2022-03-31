@@ -1,4 +1,4 @@
-package com.oneq.book.web.dto;
+package com.oneq.book.web.dto.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,11 +20,10 @@ public class SearchDto {
     List<Items> items = new ArrayList<>();
 
     static class Items{
+
         public String title;
         public String image;
         public String author;
         public String isbn;
-        public String pubdate;
-        public String description;
     }
 }

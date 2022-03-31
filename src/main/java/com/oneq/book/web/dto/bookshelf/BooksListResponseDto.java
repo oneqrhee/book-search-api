@@ -1,4 +1,4 @@
-package com.oneq.book.web.dto;
+package com.oneq.book.web.dto.bookshelf;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.oneq.book.domain.Books;
@@ -14,7 +14,8 @@ public class BooksListResponseDto {
     private final String isbn;
     private final String link;
     private final String image;
-    private final String pubdate;
+    private final String publisher;
+    private final String description;
     private final LocalDateTime modifiedDate;
 
     public BooksListResponseDto(Books entity){
@@ -24,7 +25,8 @@ public class BooksListResponseDto {
         this.isbn = entity.getIsbn();
         this.link = entity.getLink();
         this.image = entity.getImage();
-        this.pubdate = entity.getPubdate();
+        this.publisher = entity.getPublisher();
+        this.description = entity.getDescription();
         this.modifiedDate = entity.getModifiedDate();
     }
 }
