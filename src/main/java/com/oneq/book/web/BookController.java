@@ -1,16 +1,12 @@
 package com.oneq.book.web;
 
-import com.oneq.book.service.BooksService;
 import com.oneq.book.service.SearchService;
 import com.oneq.book.web.dto.bookshelf.BooksSaveRequestDto;
-import com.oneq.book.web.dto.search.SearchRequestDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.validation.Valid;
 
 @Slf4j
 @RequiredArgsConstructor
