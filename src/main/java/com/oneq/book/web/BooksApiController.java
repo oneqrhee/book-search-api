@@ -2,6 +2,7 @@ package com.oneq.book.web;
 
 import com.oneq.book.service.BooksService;
 import com.oneq.book.web.dto.BooksResponseDto;
+import com.oneq.book.web.dto.SearchDto;
 import com.oneq.book.web.dto.BooksSaveRequestDto;
 import com.oneq.book.web.dto.BooksUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,11 @@ public class BooksApiController {
     @PutMapping("/api/v1/books/{id}")
     public Long update(@PathVariable Long id, @RequestBody BooksUpdateRequestDto requestDto){
         return booksService.update(id, requestDto);
+    }
+
+    @GetMapping("/api/v1/books/{id}")
+    public BooksResponseDto findById(@PathVariable Long id){
+        return booksService.findById(id);
     }
 
     @DeleteMapping("/api/v1/books/{id}")

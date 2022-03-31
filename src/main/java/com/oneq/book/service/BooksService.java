@@ -2,10 +2,7 @@ package com.oneq.book.service;
 
 import com.oneq.book.domain.Books;
 import com.oneq.book.domain.BooksRepository;
-import com.oneq.book.web.dto.BooksListResponseDto;
-import com.oneq.book.web.dto.BooksResponseDto;
-import com.oneq.book.web.dto.BooksSaveRequestDto;
-import com.oneq.book.web.dto.BooksUpdateRequestDto;
+import com.oneq.book.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +29,7 @@ public class BooksService {
     private final BooksRepository booksRepository;
 
 
-    public static BooksResponseDto search(String keyword, String start) {
+    public static SearchDto search(String keyword, String start) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> httpEntity = getHttpEntity();
         URI targetUrl = UriComponentsBuilder
@@ -42,7 +39,7 @@ public class BooksService {
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUri();
-        return restTemplate.exchange(targetUrl, HttpMethod.GET, httpEntity, BooksResponseDto.class).getBody();
+        return restTemplate.exchange(targetUrl, HttpMethod.GET, httpEntity, SearchDto.class).getBody();
     }
 
     private static HttpEntity<String> getHttpEntity() {
@@ -59,22 +56,39 @@ public class BooksService {
 
     @Transactional
     public Long update(Long id, BooksUpdateRequestDto requestDto){
-        Books books = booksRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 책이 없습니다. id="+ id));
+        Books books = booksRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 책이 없습니다. id="+ id));
 
-        books.update(requestDto.getTitle(), requestDto.getAuthor(), requestDto.getIsbn(), requestDto.getLink(), requestDto.getImage(), requestDto.getPubdate());
+        books.update(
+                requestDto.getTitle(),
+                requestDto.getAuthor(),
+                requestDto.getIsbn(),
+                requestDto.getLink(),
+                requestDto.getImage(),
+                requestDto.getPubdate());
         return id;
     }
 
     @Transactional
     public void delete (Long id){
-        Books posts = booksRepository.findById(id)
+        Books books = booksRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id="+ id));
 
-        booksRepository.delete(posts);
+        booksRepository.delete(books);
     }
 
     @Transactional(readOnly = true)
-    public List<BooksListResponseDto> findAllDesc(){
-        return booksRepository.findAllDesc().stream().map(BooksListResponseDto::new).collect(Collectors.toList());
+    public BooksResponseDto findById (Long id){
+        Books entity = booksRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 책이 없습니다. id="+ id));
+
+        return new BooksResponseDto(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BooksListResponseDto> findAllDesc() {
+        return booksRepository.findAllDesc().stream()
+                .map(BooksListResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
