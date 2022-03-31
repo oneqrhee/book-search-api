@@ -13,31 +13,44 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 
 public class BooksService {
 
-    private final RestTemplate restTemplate;
+    private static final String id = "lXRknaqghWIRvvHrJamp";
+    private static final String secret = "9CTx6uLaUK";
+    private static final String URL = "https://openapi.naver.com/v1/search/book.json?display=20";
+    private final BooksRepository booksRepository;
 
-    public BooksResponseDto requestBook(String keyword) {
-        final HttpHeaders headers = new HttpHeaders();
-        String CLIENT_ID = "lXRknaqghWIRvvHrJamp";
-        headers.set("X-Naver-Client-Id", CLIENT_ID);
-        String CLIENT_SECRET = "9CTx6uLaUK";
-        headers.set("X-Naver-Client-Secret", CLIENT_SECRET);
 
-        final HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        String openNaverBookUrl_getBooks = "https://openapi.naver.com/v1/search/book_adv?d_titl={keyword}";
-        return restTemplate.exchange(openNaverBookUrl_getBooks, HttpMethod.GET, entity, BooksResponseDto.class, keyword).getBody();
+    public static BooksResponseDto search(String keyword, String start) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<String> httpEntity = getHttpEntity();
+        URI targetUrl = UriComponentsBuilder
+                .fromUriString(URL)
+                .queryParam("query", keyword)
+                .queryParam("start", start)
+                .build()
+                .encode(StandardCharsets.UTF_8)
+                .toUri();
+        return restTemplate.exchange(targetUrl, HttpMethod.GET, httpEntity, BooksResponseDto.class).getBody();
     }
 
-    private final BooksRepository booksRepository;
+    private static HttpEntity<String> getHttpEntity() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("X-Naver-Client-Id", id);
+        httpHeaders.set("X-Naver-Client-Secret", secret);
+        return new HttpEntity<>(httpHeaders);
+    }
 
     @Transactional
     public Long save(BooksSaveRequestDto requestDto){
